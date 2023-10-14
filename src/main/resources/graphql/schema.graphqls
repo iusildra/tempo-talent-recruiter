@@ -1,0 +1,23 @@
+type Query {
+  bookById(id: ID): Book
+  countries: [Country]
+  countryById(id: ID!): Country
+}
+
+type Book {
+  id: ID
+  name: String
+  pageCount: Int
+  author: Author
+}
+
+type Author {
+  id: ID
+  firstName: String
+  lastName: String
+}
+
+type Country {
+  id: ID!
+  name: String!
+}
