@@ -1,5 +1,7 @@
 package com.tempotalent.api.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,22 +9,26 @@ import jakarta.persistence.*;
 public class Country {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Integer id;
+
   @Column(length = 50)
   private String name;
 
+  @OneToMany(mappedBy = "country")
+  private List<City> cities;
+
   public Country() {}
 
-  public Country(int id, String name) {
+  public Country(Integer id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

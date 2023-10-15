@@ -6,11 +6,11 @@ import jakarta.persistence.*;
 public class Feature {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public final int id;
+  private Integer id;
 
   private String name;
 
-  public Feature(int id, String name) {
+  public Feature(Integer id, String name) {
     this.id = id;
     this.name = name;
   }

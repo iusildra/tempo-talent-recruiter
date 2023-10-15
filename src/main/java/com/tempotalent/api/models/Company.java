@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "company")
 public class Company {
   @Id
-  public final Integer siret;
+  private Integer siret;
   private String name;
   private String address;
 

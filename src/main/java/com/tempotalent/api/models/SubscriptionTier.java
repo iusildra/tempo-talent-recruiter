@@ -6,16 +6,16 @@ import jakarta.persistence.*;
 public class SubscriptionTier {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public final int id;
+  private Integer id;
   private String level;
   @Column(name = "price_biyearly")
-  private int priceBiyearly;
+  private Integer priceBiyearly;
   @Column(name = "price_yearly")
-  private int priceYearly;
+  private Integer priceYearly;
   @Column(name = "price_monthly")
-  private int priceMonthly;
+  private Integer priceMonthly;
 
-  public SubscriptionTier(int id, String level, int priceBiyearly, int priceYearly, int priceMonthly) {
+  public SubscriptionTier(Integer id, String level, Integer priceBiyearly, Integer priceYearly, Integer priceMonthly) {
     this.id = id;
     this.level = level;
     this.priceBiyearly = priceBiyearly;
@@ -31,27 +31,27 @@ public class SubscriptionTier {
     this.level = level;
   }
 
-  public int getPriceBiyearly() {
+  public Integer getPriceBiyearly() {
     return priceBiyearly;
   }
 
-  public void setPriceBiyearly(int priceBiyearly) {
+  public void setPriceBiyearly(Integer priceBiyearly) {
     this.priceBiyearly = priceBiyearly;
   }
 
-  public int getPriceYearly() {
+  public Integer getPriceYearly() {
     return priceYearly;
   }
 
-  public void setPriceYearly(int priceYearly) {
+  public void setPriceYearly(Integer priceYearly) {
     this.priceYearly = priceYearly;
   }
 
-  public int getPriceMonthly() {
+  public Integer getPriceMonthly() {
     return priceMonthly;
   }
 
-  public void setPriceMonthly(int priceMonthly) {
+  public void setPriceMonthly(Integer priceMonthly) {
     this.priceMonthly = priceMonthly;
   }
 }

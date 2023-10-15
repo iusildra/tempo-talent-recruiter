@@ -7,17 +7,27 @@ import jakarta.persistence.*;
 public class City {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public final int id;
+  private Integer id;
 
   @Column(length = 50)
   private String name;
 
-  public final int country;
+  @ManyToOne
+  private Country country;
 
-  public City(int id, String name, int country) {
+  public City() {}
+
+  public City(Integer id, String name) {
     this.id = id;
     this.name = name;
-    this.country = country;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -26,5 +36,13 @@ public class City {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Country getCountry() {
+    return country;
+  }
+
+  public void setCountry(Country country) {
+    this.country = country;
   }
 }

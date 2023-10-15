@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 @Table(name = "address")
 public record Address(
     @Id @GeneratedValue(strategy = GenerationType.AUTO) UUID id,
-    int num,
+    Integer num,
     String street,
     String complement,
     @Column(name = "zip_code") short zipCode,
-    int city) {
+    Integer city) {
 }

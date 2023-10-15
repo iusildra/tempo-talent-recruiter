@@ -4,9 +4,9 @@ CREATE TABLE "country" (
 );
 
 CREATE TABLE "city" (
-  "id" serial PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "name" varchar(50),
-  "country" integer REFERENCES "country" ("id")
+  "country_id" integer REFERENCES "country" ("id")
 );
 
 CREATE TABLE "address" (
@@ -217,7 +217,7 @@ INSERT INTO "country" ("name") VALUES
 ('Zambia'),
 ('Zimbabwe');
 
-INSERT INTO "city" (name, country) VALUES
+INSERT INTO "city" (name, country_id) VALUES
   ('Montpellier', 61),
   ('Paris', 61),
   ('Lausanne', 170)

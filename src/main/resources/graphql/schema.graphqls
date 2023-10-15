@@ -1,23 +1,19 @@
 type Query {
-  bookById(id: ID): Book
   countries: [Country]
-  countryById(id: ID!): Country
-}
-
-type Book {
-  id: ID
-  name: String
-  pageCount: Int
-  author: Author
-}
-
-type Author {
-  id: ID
-  firstName: String
-  lastName: String
+  countryById(id: Int!): Country
+  cities: [City]
+  cityById(id: Int): City
+  citiesByCountryId(countryId: Int, page: Int, size: Int): [City]
+  registerCity(city: City): City
 }
 
 type Country {
-  id: ID!
-  name: String!
+  id: Int
+  name: String
+}
+
+type City {
+  id: Int
+  name: String
+  country: Country
 }
