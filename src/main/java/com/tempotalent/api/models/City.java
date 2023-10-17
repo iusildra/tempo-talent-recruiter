@@ -13,6 +13,7 @@ public class City {
   private String name;
 
   @ManyToOne
+  @JoinColumn(name = "country_id")
   private Country country;
 
   public City() {}
@@ -20,6 +21,12 @@ public class City {
   public City(Integer id, String name) {
     this.id = id;
     this.name = name;
+  }
+
+  public City(String name, Integer countryId) {
+    this.name = name;
+    this.country = new Country();
+    this.country.setId(countryId);
   }
 
   public Integer getId() {

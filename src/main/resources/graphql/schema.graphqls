@@ -4,7 +4,7 @@ type Query {
   cities: [City]
   cityById(id: Int): City
   citiesByCountryId(countryId: Int, page: Int, size: Int): [City]
-  registerCity(city: City): City
+  registerCity(name: String, countryId: Int): City
 }
 
 type Country {
@@ -16,4 +16,13 @@ type City {
   id: Int
   name: String
   country: Country
+}
+
+input CreateCityInput {
+  name: String!
+  countryId: Int!
+}
+
+type Mutation {
+  registerCity(name: String!, countryId: Int!): City
 }

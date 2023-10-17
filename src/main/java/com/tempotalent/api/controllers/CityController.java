@@ -2,38 +2,46 @@ package com.tempotalent.api.controllers;
 
 import java.util.List;
 
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import com.tempotalent.api.models.City;
-import com.tempotalent.api.repositories.CityRepository;
-
-import io.micrometer.common.lang.Nullable;
+import com.tempotalent.api.services.CityService;
 
 @Controller
-public class CityController {
-  @Autowired
-  private final CityRepository repository;
+public class CityController implements GraphQLMutationResolver, GraphQLQueryResolver {
 
-  public CityController(CityRepository repository) {
-    this.repository = repository;
+  @Autowired
+  private final CityService service;
+
+  public CityController(CityService service) {
+    this.service = service;
   }
 
   @QueryMapping
   public List<City> cities() {
-    return repository.findAll();
+    return service.fetchCities();
   }
 
-  @Nullable
   @QueryMapping
   public City cityById(@Argument Integer id) {
-    return repository.findById(id).orElse(null);
+    return service.fetchCityById(id);
   }
 
   @QueryMapping
   public List<City> citiesByCountryId(@Argument Integer countryId, @Argument Integer page, @Argument Integer size) {
-    return repository.findByCountryId(countryId, page, size);
+    return service.fetchCitiesByCountryId(countryId, page, size);
+  }
+
+  @MutationMapping
+  public City registerCity(@Argument String name, @Argument Integer countryId) {
+    return service.registerCity(name, countryId);
   }
 }
