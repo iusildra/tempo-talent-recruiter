@@ -29,6 +29,10 @@ public class CityService {
     return repository.findById(id).orElse(null);
   }
 
+  public List<City> fetchCitiesByName(@Argument String name, @Argument Integer page, @Argument Integer size) {
+    return repository.findByName(name, page, size);
+  }
+
   public List<City> fetchCitiesByCountryId(@Argument Integer countryId, @Argument Integer page, @Argument Integer size) {
     return repository.findByCountryId(countryId, page, size);
   }

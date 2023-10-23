@@ -3,6 +3,7 @@ type Query {
   countryById(id: Int!): Country
   cities: [City]
   cityById(id: Int): City
+  citiesByName(name: String, page: Int, size: Int): [City]
   citiesByCountryId(countryId: Int, page: Int, size: Int): [City]
   registerCity(name: String, countryId: Int): City
 }

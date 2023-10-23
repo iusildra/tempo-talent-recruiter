@@ -23,6 +23,19 @@ public interface CityRepository extends JpaRepository<City, Integer> {
     city.setCountry(country);
 
     Example<City> example = Example.of(city, matcher);
+    Pageable pageable = PageRequest.of(page, size);
+
+    return findAll(example, pageable).getContent();
+  }
+
+  default List<City> findByName(String name, Integer page, Integer size) {
+    ExampleMatcher matcher = ExampleMatcher.matching()
+        .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.startsWith().ignoreCase());
+
+    var city = new City();
+    city.setName(name);
+
+    Example<City> example = Example.of(city, matcher);
 
     Pageable pageable = PageRequest.of(page, size);
 

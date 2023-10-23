@@ -6,57 +6,82 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.graphql.test.tester.HttpGraphQlTester;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.graphql.test.tester.GraphQlTester;
 
-import com.tempotalent.api.config.CityConfig;
 import com.tempotalent.api.controllers.CityController;
 import com.tempotalent.api.models.City;
 
 @SpringBootTest
+@AutoConfigureGraphQlTester
 class CityControllerTest {
-  ApplicationContext context = new AnnotationConfigApplicationContext(CityConfig.class);
-
-  WebTestClient client = WebTestClient.bindToApplicationContext(context).configureClient().baseUrl("/").build();
-
-  HttpGraphQlTester tester = HttpGraphQlTester.create(client);
+  @Autowired
+  private GraphQlTester tester;
 
   @Autowired
   CityController controller;
 
   @Test
   void testCityListing() {
-    var results = tester.document("query { cities { id name } }").execute().path("cities").entityList(City.class);
+    var results = tester.document("query citiesList { cities { id name } }").execute().path("cities")
+        .entityList(City.class);
     ;
 
     assertNotNull(results);
-    var cities = results.get();
-    assertTrue(cities.size() > 0);
+    assertTrue(results.get().size() > 0);
   }
 
   @Test
   void testCityById() {
-    var city = controller.cityById(1);
-    assertNotNull(city);
+    var results = tester.document("query cityById($id: Int!) { cityById(id: $id) { id name } }").variable("id", 1)
+        .execute().path("cityById").entity(City.class);
+
+    assertNotNull(results.get());
   }
 
   @Test
   void testCitiesByCountryId() {
-    var cities = controller.citiesByCountryId(61, 0, 10);
-    assertNotNull(cities);
-    assertTrue(cities.size() > 0);
+    var results = tester.document(
+        "query citiesByCountryId($countryId: Int!, $page: Int!, $size: Int!) { citiesByCountryId(countryId: $countryId, page: $page, size: $size) { id name } }")
+        .variable("countryId", 61).variable("page", 0).variable("size", 10).execute().path("citiesByCountryId")
+        .entityList(City.class);
+    assertTrue(results.get().size() > 0);
+  }
+
+  @Test
+  void testCitiesByName() {
+    var query = tester.document(
+        "query citiesByName($name: String!, $page: Int!, $size: Int!) { citiesByName(name: $name, page: $page, size: $size) { id name } }")
+        .variable("page", 0).variable("size", 10);
+    var name = "Montpellier";
+    var results = query
+        .variable("name", name).execute().path("citiesByName")
+        .entityList(City.class);
+
+    assertTrue(results.get().size() > 0);
+
+    name = "Mont";
+    results = query
+        .variable("name", name).execute().path("citiesByName")
+        .entityList(City.class);
+
+    assertTrue(results.get().size() > 0);
   }
 
   @Test
   void createCity() {
-    var newCity = new City("Test City", 61);
-    var city = controller.registerCity(newCity.getName(), newCity.getCountry().getId());
+    var query = tester.document(
+        "mutation registerCity($name: String!, $countryId: Int!) { registerCity(name: $name, countryId: $countryId) { id name country { id }} }");
+    var name = "Test City";
+    var countryId = 61;
+    var resultsExact = query
+        .variable("name", name).variable("countryId", countryId).execute().path("registerCity").entity(City.class);
+
+    var city = resultsExact.get();
     assertNotNull(city);
     assertNotNull(city.getId());
-    assertEquals(newCity.getName(), city.getName());
-    assertEquals(newCity.getCountry().getId(), city.getCountry().getId());
+    assertEquals(name, city.getName());
+    assertEquals(countryId, city.getCountry().getId());
   }
 }
