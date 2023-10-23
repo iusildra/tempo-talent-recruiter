@@ -14,7 +14,7 @@ import io.micrometer.common.lang.Nullable;
 @Service
 public class CityService {
   @Autowired
-  private final CityRepository repository;
+  private CityRepository repository;
 
   public CityService(CityRepository repository) {
     this.repository = repository;

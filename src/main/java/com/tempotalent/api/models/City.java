@@ -1,5 +1,7 @@
 package com.tempotalent.api.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +17,9 @@ public class City {
   @ManyToOne
   @JoinColumn(name = "country_id")
   private Country country;
+
+  @OneToMany
+  private List<Address> addresses;
 
   public City() {}
 

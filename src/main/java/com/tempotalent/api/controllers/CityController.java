@@ -16,7 +16,6 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 
 @Controller
 public class CityController implements GraphQLMutationResolver, GraphQLQueryResolver {
-
   @Autowired
   private final CityService service;
 

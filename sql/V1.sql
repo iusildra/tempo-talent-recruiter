@@ -14,8 +14,8 @@ CREATE TABLE "address" (
   "num" integer,
   "street" text NOT NULL,
   "complement" text,
-  "zipCode" smallint,
-  "city" integer REFERENCES "city" ("id")
+  "zip_code" integer,
+  "city_id" integer REFERENCES "city" ("id")
 );
 
 INSERT INTO "country" ("name") VALUES
@@ -222,3 +222,7 @@ INSERT INTO "city" (name, country_id) VALUES
   ('Paris', 61),
   ('Lausanne', 170)
 
+INSERT INTO "address"(id, num, street, complement, zip_code, city) VALUES
+  ('a1b2c3d4-1234-5678-9012-abcdef123456', 1, 'rue de la paix', NULL, 75000, 1),
+  ('b2c3d4e5-1234-5678-9012-abcdef123456', 2, 'rue de la joie', NULL, 34000, 3),
+  ('c3d4e5f6-1234-5678-9012-abcdef123456', 3, 'rue de la tristesse', NULL, 1000, 2)

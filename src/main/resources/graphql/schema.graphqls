@@ -6,6 +6,11 @@ type Query {
   citiesByName(name: String, page: Int, size: Int): [City]
   citiesByCountryId(countryId: Int, page: Int, size: Int): [City]
   registerCity(name: String, countryId: Int): City
+  searchAddresses(street: String!, zipCode: Int, cityId: Int, page: Int!, size: Int!): [Address]
+}
+
+type Mutation {
+  registerCity(name: String!, countryId: Int!): City
 }
 
 type Country {
@@ -19,11 +24,11 @@ type City {
   country: Country
 }
 
-input CreateCityInput {
-  name: String!
-  countryId: Int!
-}
-
-type Mutation {
-  registerCity(name: String!, countryId: Int!): City
+type Address {
+  id: ID
+  num: Int
+  street: String
+  complement: String
+  zipCode: String
+  city: City
 }

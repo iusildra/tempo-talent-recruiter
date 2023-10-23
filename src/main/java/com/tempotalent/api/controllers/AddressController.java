@@ -1,50 +1,31 @@
 package com.tempotalent.api.controllers;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import com.tempotalent.api.models.Address;
-import com.tempotalent.api.repositories.AddressRepository;
+import com.tempotalent.api.services.AddressService;
 
-public class AddressController {
-  private final AddressRepository addressRepository;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 
-  public AddressController(AddressRepository addressRepository) {
-    this.addressRepository = addressRepository;
+@Controller
+public class AddressController implements GraphQLMutationResolver, GraphQLQueryResolver {
+  @Autowired
+  private final AddressService addressService;
+
+  public AddressController(AddressService addressService) {
+    this.addressService = addressService;
   }
 
-  @GetMapping
-  public List<Address> index() {
-    return addressRepository.findAll();
-  }
-  
-  @GetMapping("/{uuid}")
-  public Optional<Address> get(@PathVariable UUID id) {
-    return addressRepository.findById(id);
+  @QueryMapping
+  public List<Address> searchAddresses(@Argument String street,
+      @Argument Integer zipCode, @Argument Integer cityId, @Argument Integer page, @Argument Integer size) {
+    return addressService.searchAddresses(street, zipCode, cityId, page, size);
   }
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public Address create(Address address) {
-    return addressRepository.save(address);
-  }
-
-  @PutMapping("/{uuid}")
-  public Address update(@PathVariable UUID id, Address address) {
-    return addressRepository.save(address);
-  }
-
-  @DeleteMapping("/{uuid}")
-  public void delete(@PathVariable UUID id) {
-    addressRepository.deleteById(id);
-  }
 }

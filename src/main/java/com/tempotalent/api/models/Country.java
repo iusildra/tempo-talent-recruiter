@@ -14,7 +14,7 @@ public class Country {
   @Column(length = 50)
   private String name;
 
-  @OneToMany(mappedBy = "country")
+  @OneToMany
   private List<City> cities;
 
   public Country() {}
