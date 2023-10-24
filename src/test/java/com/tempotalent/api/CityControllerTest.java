@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureG
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 
-import com.tempotalent.api.controllers.CityController;
 import com.tempotalent.api.models.City;
 
 @SpringBootTest
@@ -19,16 +18,12 @@ class CityControllerTest {
   @Autowired
   private GraphQlTester tester;
 
-  @Autowired
-  CityController controller;
-
   @Test
   void testCityListing() {
     var results = tester.document("query citiesList { cities { id name } }").execute().path("cities")
         .entityList(City.class);
     ;
 
-    assertNotNull(results);
     assertTrue(results.get().size() > 0);
   }
 
