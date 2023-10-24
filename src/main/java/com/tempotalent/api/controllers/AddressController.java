@@ -27,11 +27,18 @@ public class AddressController implements GraphQLMutationResolver, GraphQLQueryR
   @QueryMapping
   public List<Address> searchAddresses(@Argument String street,
       @Argument Integer zipCode, @Argument Integer cityId, @Argument Integer page, @Argument Integer size) {
-    return addressService.searchAddresses(street, zipCode, cityId, page, size);
+    var p = page;
+    var s = size;
+    if (page == null)
+      p = 0;
+    if (size == null)
+      s = 10;
+    return addressService.searchAddresses(street, zipCode, cityId, p, s);
   }
 
   @MutationMapping
-  public Address registerAddress(@Argument Integer num, @Argument String street, @Argument String complement, @Argument Integer zipCode, @Argument Integer cityId) {
+  public Address registerAddress(@Argument Integer num, @Argument String street, @Argument String complement,
+      @Argument Integer zipCode, @Argument Integer cityId) {
     return addressService.registerAddress(num, street, complement, zipCode, cityId);
   }
 

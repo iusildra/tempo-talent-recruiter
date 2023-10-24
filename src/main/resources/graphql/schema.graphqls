@@ -13,6 +13,9 @@ type Query {
     page: Int!
     size: Int!
   ): [Address]
+  companies: [Company]
+  companiesByName(name: String!, page: Int, size: Int): [Company]
+  companyBySiret(siret: Int!): Company
 }
 
 type Mutation {
@@ -25,6 +28,9 @@ type Mutation {
     cityId: Int!
   ): Address
   deleteAddress(id: ID!): Boolean
+  registerCompany(siret: Int!, name: String!, addressId: ID!): Company
+  updateCompany(name: String, addressId: ID): Company
+  deleteCompany(id: ID!): Boolean
 }
 
 type Country {
@@ -45,4 +51,10 @@ type Address {
   complement: String
   zipCode: String
   city: City
+}
+
+type Company {
+  siret: Int
+  name: String
+  address: Address
 }

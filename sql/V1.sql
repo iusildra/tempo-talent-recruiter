@@ -1,3 +1,4 @@
+-- Active: 1698060232258@@127.0.0.1@5432@postgres
 CREATE TABLE "country" (
   "id" serial PRIMARY KEY,
   "name" varchar(50)
@@ -222,7 +223,28 @@ INSERT INTO "city" (name, country_id) VALUES
   ('Paris', 61),
   ('Lausanne', 170)
 
-INSERT INTO "address"(id, num, street, complement, zip_code, city) VALUES
+INSERT INTO "address"(id, num, street, complement, zip_code, city_id) VALUES
   ('a1b2c3d4-1234-5678-9012-abcdef123456', 1, 'rue de la paix', NULL, 75000, 1),
   ('b2c3d4e5-1234-5678-9012-abcdef123456', 2, 'rue de la joie', NULL, 34000, 3),
-  ('c3d4e5f6-1234-5678-9012-abcdef123456', 3, 'rue de la tristesse', NULL, 1000, 2)
+  ('c3d4e5f6-1234-5678-9012-abcdef123456', 3, 'rue de la tristesse', NULL, 1000, 2),
+  ('c3d4e526-1234-5678-9012-abcdef123456', 4, 'rue de la colère', NULL, 1000, 2);
+
+CREATE TABLE "company" (
+  "siret" integer PRIMARY KEY,
+  "name" varchar,
+  "address" uuid REFERENCES "address" ("id")
+);
+
+CREATE TABLE "company_recruiter" (
+  "id" uuid PRIMARY KEY,
+  "company" integer REFERENCES "company" ("siret"),
+  "recruiter" uuid,
+  "proof" bytea,
+  UNIQUE ("company", "recruiter")
+);
+
+INSERT INTO company (siret, name, address) VALUES
+  (123456789, 'Company 1', 'a1b2c3d4-1234-5678-9012-abcdef123456'),
+  (987654321, 'Company 2', 'b2c3d4e5-1234-5678-9012-abcdef123456'),
+  (192837465, 'Company 3', 'c3d4e5f6-1234-5678-9012-abcdef123456'),
+  (836293720, 'Tempo Talent', 'c3d4e526-1234-5678-9012-abcdef123456');

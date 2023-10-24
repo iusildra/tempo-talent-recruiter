@@ -10,10 +10,21 @@ public class Company {
   private String name;
   private String address;
 
+  public Company() {
+  }
+
   public Company(Integer siret, String name, String address) {
     this.siret = siret;
     this.name = name;
     this.address = address;
+  }
+
+  public Integer getSiret() {
+    return siret;
+  }
+
+  public void setSiret(Integer siret) {
+    this.siret = siret;
   }
 
   public String getName() {

@@ -25,22 +25,34 @@ public class CityController implements GraphQLMutationResolver, GraphQLQueryReso
 
   @QueryMapping
   public List<City> cities() {
-    return service.fetchCities();
+    return service.fetch();
   }
 
   @QueryMapping
   public City cityById(@Argument Integer id) {
-    return service.fetchCityById(id);
+    return service.fetchById(id);
   }
 
   @QueryMapping
   public List<City> citiesByName(@Argument String name, @Argument Integer page, @Argument Integer size) {
-    return service.fetchCitiesByName(name, page, size);
+    var p = page; // TODO add a graphQL directive to automatically set default values
+    var s = size;
+    if (page == null)
+      p = 0;
+    if (size == null)
+      s = 10;
+    return service.fetchByName(name, p, s);
   }
 
   @QueryMapping
   public List<City> citiesByCountryId(@Argument Integer countryId, @Argument Integer page, @Argument Integer size) {
-    return service.fetchCitiesByCountryId(countryId, page, size);
+    var p = page;
+    var s = size;
+    if (page == null)
+      p = 0;
+    if (size == null)
+      s = 10;
+    return service.fetchByCountryId(countryId, p, s);
   }
 
   @MutationMapping
