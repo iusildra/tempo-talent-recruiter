@@ -2,6 +2,7 @@ package com.tempotalent.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureG
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 
-import com.tempotalent.api.models.City;
+import com.tempotalent.api.city.City;
 
 @SpringBootTest
 @AutoConfigureGraphQlTester
@@ -64,10 +65,11 @@ class CityControllerTest {
     assertTrue(results.get().size() > 0);
   }
 
+  private final String createQuery = "mutation registerCity($name: String!, $countryId: Int!) { registerCity(name: $name, countryId: $countryId) { id name country { id }} }";
+
   @Test
   void createCity() {
-    var query = tester.document(
-        "mutation registerCity($name: String!, $countryId: Int!) { registerCity(name: $name, countryId: $countryId) { id name country { id }} }");
+    var query = tester.document(createQuery);
     var name = "Test City";
     var countryId = 61;
     var resultsExact = query
@@ -78,5 +80,35 @@ class CityControllerTest {
     assertNotNull(city.getId());
     assertEquals(name, city.getName());
     assertEquals(countryId, city.getCountry().getId());
+  }
+
+  @Test
+  void failToCreateCityWithEmptyName() {
+    var query = tester.document(createQuery);
+    var result = query
+        .variable("name", "").variable("countryId", 61);
+    assertThrows(AssertionError.class, () -> {
+      result.execute().path("registerCity");
+    });
+  }
+
+  @Test
+  void failToCreateCityWithNameOfMoreThan100Chars() {
+    var query = tester.document(createQuery);
+    var result = query
+        .variable("name",
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        .variable("countryId", 61);
+    assertThrows(AssertionError.class, () -> result.execute().path("registerCity"));
+  }
+
+  @Test
+  void failToCreateCityWithInexistingCountry() {
+    var query = tester.document(createQuery);
+    var result = query
+        .variable("name",
+            "test")
+        .variable("countryId", -1);
+    assertThrows(AssertionError.class, () -> result.execute().path("registerCity"));
   }
 }

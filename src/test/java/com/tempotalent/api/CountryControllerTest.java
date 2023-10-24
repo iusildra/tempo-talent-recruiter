@@ -8,8 +8,8 @@ import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureG
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 
-import com.tempotalent.api.controllers.CountryController;
-import com.tempotalent.api.models.Country;
+import com.tempotalent.api.country.CountryController;
+import com.tempotalent.api.country.Country;
 
 @SpringBootTest
 @AutoConfigureGraphQlTester
