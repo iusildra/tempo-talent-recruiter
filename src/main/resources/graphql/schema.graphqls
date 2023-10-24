@@ -6,11 +6,25 @@ type Query {
   citiesByName(name: String, page: Int, size: Int): [City]
   citiesByCountryId(countryId: Int, page: Int, size: Int): [City]
   registerCity(name: String, countryId: Int): City
-  searchAddresses(street: String!, zipCode: Int, cityId: Int, page: Int!, size: Int!): [Address]
+  searchAddresses(
+    street: String!
+    zipCode: Int
+    cityId: Int
+    page: Int!
+    size: Int!
+  ): [Address]
 }
 
 type Mutation {
   registerCity(name: String!, countryId: Int!): City
+  registerAddress(
+    num: Int
+    street: String!
+    complement: String
+    zipCode: Int!
+    cityId: Int!
+  ): Address
+  deleteAddress(id: ID!): Boolean
 }
 
 type Country {

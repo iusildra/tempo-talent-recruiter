@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "address")
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private Integer num;
     private String street;
@@ -23,6 +23,7 @@ public class Address {
     }
 
     public Address(Integer num, String street, String complement, Integer zipCode, Integer cityId) {
+        this.id = UUID.randomUUID();
         this.num = num;
         this.street = street;
         this.complement = complement;
