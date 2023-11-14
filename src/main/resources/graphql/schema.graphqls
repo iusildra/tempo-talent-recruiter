@@ -50,6 +50,7 @@ type Query {
   tierById(id: Int!): Tier
   recruiterById(id: ID!): Recruiter
   recruiterByEmail(email: String!): [Recruiter]
+  subscriptions: [Subscription]
 }
 
 

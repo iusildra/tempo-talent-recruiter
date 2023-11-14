@@ -4,20 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.graphql.test.tester.GraphQlTester;
 
+import com.tempotalent.AbstractTest;
 import com.tempotalent.api.companyrecruiter.CompanyRecruiter;
 
 import jakarta.transaction.Transactional;
 
-@SpringBootTest
-@AutoConfigureGraphQlTester
-class CompanyRecruiterTests {
-  @Autowired
-  private GraphQlTester tester;
+class CompanyRecruiterTests extends AbstractTest {
 
   @Test
   @Transactional

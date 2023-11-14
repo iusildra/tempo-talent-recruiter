@@ -6,19 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tempotalent.AbstractTest;
 import com.tempotalent.api.feature.Feature;
 
-@SpringBootTest
-@AutoConfigureGraphQlTester
-class FeatureControllerTests {
-  @Autowired
-  private GraphQlTester tester;
+class FeatureControllerTests extends AbstractTest {
 
   @Test
   void fetchFeatures() {

@@ -12,6 +12,10 @@ java {
 	targetCompatibility = '17'
 }
 
+// ext {
+//   set('springCloudVersion', "2022.0.4")
+// }
+
 repositories {
 	mavenCentral()
 }
@@ -24,7 +28,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.graphql-java:graphql-java-extended-scalars:21.0'
 	implementation 'com.graphql-java:graphql-java-extended-validation:21.0'
-	// implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.webjars:jquery:3.4.1'
 	implementation 'org.webjars:bootstrap:4.3.1'
 	implementation 'org.webjars:webjars-locator-core'
@@ -35,6 +38,12 @@ dependencies {
 	testImplementation 'org.springframework.graphql:spring-graphql-test'
 	testImplementation 'org.springframework:spring-webflux'
 }
+
+// dependencyManagement {
+//   imports {
+//     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//   }
+// }
 
 tasks.named('test') {
 	useJUnitPlatform()

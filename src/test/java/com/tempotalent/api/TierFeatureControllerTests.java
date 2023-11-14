@@ -5,18 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.graphql.test.tester.GraphQlTester;
 
+import com.tempotalent.AbstractTest;
 import com.tempotalent.api.tierfeature.TierFeature;
 
-@SpringBootTest
-@AutoConfigureGraphQlTester
-class TierFeatureControllerTests {
-  @Autowired
-  private GraphQlTester tester;
+class TierFeatureControllerTests extends AbstractTest {
 
   @Test
   void testFeatureAddingDeletingToTier() {

@@ -1,17 +1,27 @@
 version: '3.8'
 
 services:
-  postgres:
+  recruiter-service:
+    build: .
+    container_name: recruiter-service
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - recruiter-db
+  recruiter-db:
     image: postgres
+    container_name: recruiter-db
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./sql:/home/sql
-      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d/
+      - recruiter-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
 volumes:
-  postgres_data:
-
+  recruiter-data:
+    name: recruiter-data
