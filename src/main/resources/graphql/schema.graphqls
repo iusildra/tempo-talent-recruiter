@@ -1,3 +1,31 @@
+directive @specifiedBy(url: String!) on SCALAR
+directive @Size(
+  min: Int = 0
+  max: Int = 2147483647
+  message: String = "graphql.validation.Size.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @Min(
+  value: Int! = 0
+  message: String = "graphql.validation.Min.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @Positive(
+  message: String = "graphql.validation.Positive.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @ContainerNotEmpty(
+  message: String = "graphql.validation.ContainerNotEmpty.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @Pattern(
+  regexp: String! = ".*"
+  message: String = "graphql.validation.Pattern.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+scalar Date @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
+scalar Byte @specifiedBy(url: "https://en.wikipedia.org/wiki/Byte")
+
+
+
+###############################################################################
+##                                  Query                                    ##
+###############################################################################
 type Query {
   countries: [Country]
   countryById(id: Int!): Country
@@ -5,7 +33,7 @@ type Query {
   cityById(id: Int): City
   citiesByName(name: String, page: Int, size: Int): [City]
   citiesByCountryId(countryId: Int, page: Int, size: Int): [City]
-  registerCity(name: String, countryId: Int): City
+  addressById(id: ID!): Address
   searchAddresses(
     street: String!
     zipCode: Int
@@ -13,20 +41,121 @@ type Query {
     page: Int!
     size: Int!
   ): [Address]
+  companies: [Company]
+  companiesByName(name: String!, page: Int, size: Int): [Company]
+  companyBySiret(siret: Int!): Company
+  features: [Feature]
+  featureById(id: Int!): Feature
+  tiers: [Tier]
+  tierById(id: Int!): Tier
+  recruiterById(id: ID!): Recruiter
+  recruiterByEmail(email: String!): [Recruiter]
+  subscriptions: [Subscription]
 }
 
+
+###############################################################################
+##                                 Mutation                                  ##
+###############################################################################
 type Mutation {
-  registerCity(name: String!, countryId: Int!): City
+  registerCity(
+    name: String!
+      @Size(
+        min: 1
+        max: 100
+        message: "Name must be between 1 and 100 characters"
+      )
+    countryId: Int!
+  ): City
   registerAddress(
-    num: Int
+    num: Int @Positive
     street: String!
     complement: String
-    zipCode: Int!
+    zipCode: Int! @Positive
     cityId: Int!
   ): Address
   deleteAddress(id: ID!): Boolean
+  registerCompany(
+    siret: Int! @Positive
+    name: String!
+      @Size(
+        min: 1
+        max: 50
+        message: "Name must be between 1 and 50 characters"
+      )
+    addressId: ID!
+  ): Company
+  updateCompany(
+    siret: Int!
+    name: String
+      @Size(
+        min: 1
+        max: 50
+        message: "Name must be between 1 and 50 characters"
+      )
+    addressId: ID
+  ): Company
+  deleteCompany(siret: ID!): Boolean
+  addFeature(
+    name: String!
+      @Size(
+        min: 1
+        max: 50
+        message: "Name must be between 1 and 50 characters"
+      )
+  ): Feature
+  deleteFeature(id: Int!): Boolean
+  addTier(
+    name: String!
+      @Size(
+        min: 1
+        max: 16
+        message: "Name must be between 1 and 16 characters"
+      )
+    price2Y: Float! @Positive
+    price1Y: Float! @Positive
+    priceM: Float! @Positive
+  ): Tier
+  deleteTier(id: Int!): Boolean
+  addFeatureToTier(
+    tierId: Int!
+    featureId: Int!
+    value: String!
+      @Size(
+        min: 1
+        max: 16
+        message: "Name must be between 1 and 16 characters"
+      )
+  ): TierFeature
+  deleteFeatureFromTier(tierId: Int!, featureId: Int!): Boolean
+  addSubscriptionToRecruiter(
+    recruiterId: ID!
+    tierId: Int!
+    startDate: Date!
+    endDate: Date!
+  ): Subscription
+  deleteSubscriptionFromRecruiter(recruiterId: ID!, tierId: Int!): Boolean
+  registerCompanyRecruiter(
+    recruiterId: ID!
+    companyId: Int!
+    proof: [Byte] @ContainerNotEmpty
+  ): CompanyRecruiter
+  deleteCompanyRecruiter(id: ID!): Boolean
+  registerRecruiter(
+    firstName: String! @Size(min: 1, max: 64)
+    lastName: String! @Size(min: 1, max: 64)
+    phone: String! @Pattern(regexp: "\\+\\d{2,3} [0-9]*")
+    email: String! @Pattern(regexp: "[a-zA-Z0-9._%\\+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    password: String! @Size(min: 8, max: 128)
+  ): Recruiter
+  deleteRecruiter(id: ID!): Boolean
 }
 
+
+
+###############################################################################
+##                                  Types                                    ##
+###############################################################################
 type Country {
   id: Int
   name: String
@@ -45,4 +174,58 @@ type Address {
   complement: String
   zipCode: String
   city: City
+}
+
+type Company {
+  siret: Int
+  name: String
+  address: Address
+  recruiters: [CompanyRecruiter]
+}
+
+type Feature {
+  id: Int
+  name: String
+  tierFeatures: [TierFeature]
+}
+
+type Tier {
+  id: Int
+  level: String
+  price2Y: Float
+  price1Y: Float
+  priceM: Float
+  tierFeatures: [TierFeature]
+  subscriptions: [Subscription]
+}
+
+type TierFeature {
+  tier: Tier
+  feature: Feature
+  value: String
+}
+
+type Recruiter {
+  id: ID
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  subscription: Subscription
+  companies: [CompanyRecruiter]
+}
+type Subscription {
+  tier: Tier
+  recruiter: Recruiter
+  startDate: Date
+  endDate: Date
+}
+
+type CompanyRecruiter {
+  id: ID
+  company: Company
+  companyId: Int
+  recruiter: Recruiter
+  recruiterId: ID
+  proof: [Byte]
 }

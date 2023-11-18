@@ -1,21 +1,15 @@
 package com.tempotalent.api;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.graphql.test.tester.GraphQlTester;
 
-import com.tempotalent.api.models.Address;
+import com.tempotalent.AbstractTest;
+import com.tempotalent.api.address.Address;
 
-@SpringBootTest
-@AutoConfigureGraphQlTester
-class AddressControllerTests {
-  @Autowired
-  private GraphQlTester tester;
+class AddressControllerTests extends AbstractTest {
 
   private final String baseQuery = "query searchAddresses($street: String!, $zipCode: Int, $cityId: Int, $page: Int!, $size: Int!) { searchAddresses(street: $street, zipCode: $zipCode, cityId: $cityId, page: $page, size: $size) { id street zipCode city { id name } } }";
 
@@ -113,5 +107,21 @@ class AddressControllerTests {
         .variable("id", results.get().getId()).execute().path("deleteAddress")
         .entity(Boolean.class);
     assertTrue(deleteResults.get());
+  }
+
+  @Test
+  void failToRegisterAddressWithNegativeNumber() {
+    var query = tester.document(createQuery);
+    var result = query
+        .variable("num", -1).variable("street", "Rue de Scala").variable("zipCode", 34000).variable("cityId", 1);
+    assertThrows(AssertionError.class, () -> result.execute().path("registerAddress"));
+  }
+
+  @Test
+  void failToRegisterAddressWithNegativeZip() {
+    var query = tester.document(createQuery);
+    var result = query
+        .variable("num", 1).variable("street", "Rue de Scala").variable("zipCode", -34000).variable("cityId", 1);
+    assertThrows(AssertionError.class, () -> result.execute().path("registerAddress"));
   }
 }
