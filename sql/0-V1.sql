@@ -74,9 +74,9 @@ CREATE TABLE
 
 CREATE TABLE
     "subscription" (
+        "id" uuid PRIMARY KEY,
         "tier_id" integer REFERENCES "tier" ("id"),
         "recruiter_id" uuid REFERENCES "recruiter" ("id"),
         "start_date" date,
-        "end_date" date,
-        PRIMARY KEY ("recruiter_id", "tier_id")
+        "end_date" date
     );

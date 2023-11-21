@@ -116,16 +116,22 @@ VALUES (
 
 INSERT INTO
     subscription(
+        id,
         tier_id,
         recruiter_id,
-        start_date
+        start_date,
+        end_date
     )
 VALUES (
+        'e094a7b2-5c9f-4b3d-b7c3-55908d9c535e',
         1,
         'a1b2c3d4-1234-5678-9012-abcdef123456',
-        '2021-01-01'
+        '2021-01-01',
+        '2021-01-07'
     ), (
+        '952a05d6-e11d-4ab1-a2b3-a57cad801bc3',
         2,
         'b2c3d4e5-1234-5678-9012-abcdef123456',
-        '2021-01-01'
+        '2021-01-01',
+        '2021-01-07'
     );

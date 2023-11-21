@@ -39,4 +39,14 @@ public class RecruiterController implements GraphQLQueryResolver, GraphQLMutatio
   public Boolean deleteRecruiter(@Argument UUID id) {
     return service.removeRecruiter(id);
   }
+
+  @MutationMapping
+  public Boolean addReviewToCandidate(@Argument String title, @Argument Integer rating, @Argument String comment,
+      @Argument UUID candidateId, @Argument UUID recruiterId) {
+    try {
+      return service.addReviewToCandidate(title, rating, comment, candidateId, recruiterId);
+    } catch (Exception e) {
+      return false;
+    }
+  }
 }

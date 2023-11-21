@@ -6,6 +6,7 @@ import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
 import graphql.scalars.ExtendedScalars;
 import graphql.validation.constraints.standard.ContainerNotEmptyConstraint;
+import graphql.validation.constraints.standard.MaxConstraint;
 import graphql.validation.constraints.standard.MinConstraint;
 import graphql.validation.constraints.standard.PatternConstraint;
 import graphql.validation.constraints.standard.PositiveConstraint;
@@ -22,6 +23,7 @@ public class GraphQlConfig {
                 .onValidationErrorStrategy(OnValidationErrorStrategy.RETURN_NULL)
                 .addRule(new SizeConstraint())
                 .addRule(new MinConstraint())
+                .addRule(new MaxConstraint())
                 .addRule(new PositiveConstraint())
                 .addRule(new ContainerNotEmptyConstraint())
                 .addRule(new PatternConstraint())

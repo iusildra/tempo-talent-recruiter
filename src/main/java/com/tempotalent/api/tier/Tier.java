@@ -2,7 +2,7 @@ package com.tempotalent.api.tier;
 
 import java.util.Set;
 
-import com.tempotalent.api.subscription.Subscription;
+import com.tempotalent.api.subscription.Subscr;
 import com.tempotalent.api.tierfeature.TierFeature;
 
 import jakarta.persistence.Column;
@@ -36,7 +36,7 @@ public class Tier {
   private Set<TierFeature> tierFeatures;
 
   @OneToMany(mappedBy = "tier")
-  private Set<Subscription> subscriptions;
+  private Set<Subscr> subscriptions;
 
   public Tier() {}
 
