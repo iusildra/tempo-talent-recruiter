@@ -138,4 +138,12 @@ class RecruiterControllerTests extends AbstractTest{
         .variable("email", "test@test.com").variable("password", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     assertThrows(AssertionError.class, () -> result.execute().path("registerRecruiter"));
   }
+
+  // @Test
+  // void registerNewReview() {
+  //   var query = tester.document(
+  //       "mutation { addReviewToCandidate(title: \"Very good\", rating: 5, comment: \"Loved it\", candidateId: \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\", recruiterId: \"b2c3d4e5-1234-5678-9012-abcdef123456\" ) }");
+  //   var result = query.execute().path("addReviewToCandidate").entity(Boolean.class).get();
+  //   assertTrue(result);
+  // }
 }

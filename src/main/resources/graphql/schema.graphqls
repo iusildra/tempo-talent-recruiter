@@ -8,6 +8,10 @@ directive @Min(
   value: Int! = 0
   message: String = "graphql.validation.Min.message"
 ) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @Max(
+  value: Int! = 0
+  message: String = "graphql.validation.Min.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 directive @Positive(
   message: String = "graphql.validation.Positive.message"
 ) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
@@ -20,8 +24,6 @@ directive @Pattern(
 ) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 scalar Date @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
 scalar Byte @specifiedBy(url: "https://en.wikipedia.org/wiki/Byte")
-
-
 
 ###############################################################################
 ##                                  Query                                    ##
@@ -50,9 +52,9 @@ type Query {
   tierById(id: Int!): Tier
   recruiterById(id: ID!): Recruiter
   recruiterByEmail(email: String!): [Recruiter]
-  subscriptions: [Subscription]
+  subscriptions: [Subscr]
+  subscriptionById(id: ID!): Subscr
 }
-
 
 ###############################################################################
 ##                                 Mutation                                  ##
@@ -128,13 +130,13 @@ type Mutation {
       )
   ): TierFeature
   deleteFeatureFromTier(tierId: Int!, featureId: Int!): Boolean
-  addSubscriptionToRecruiter(
+  addSubscrToRecruiter(
     recruiterId: ID!
     tierId: Int!
     startDate: Date!
     endDate: Date!
-  ): Subscription
-  deleteSubscriptionFromRecruiter(recruiterId: ID!, tierId: Int!): Boolean
+  ): Subscr
+  deleteSubscrFromRecruiter(id: ID!): Boolean
   registerCompanyRecruiter(
     recruiterId: ID!
     companyId: Int!
@@ -145,13 +147,19 @@ type Mutation {
     firstName: String! @Size(min: 1, max: 64)
     lastName: String! @Size(min: 1, max: 64)
     phone: String! @Pattern(regexp: "\\+\\d{2,3} [0-9]*")
-    email: String! @Pattern(regexp: "[a-zA-Z0-9._%\\+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    email: String!
+      @Pattern(regexp: "[a-zA-Z0-9._%\\+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
     password: String! @Size(min: 8, max: 128)
   ): Recruiter
   deleteRecruiter(id: ID!): Boolean
+  addReviewToCandidate(
+    title: String! @Size(min: 1, max: 255)
+    rating: Int! @Min(value: 1) @Max(value: 5)
+    comment: String!
+    candidateId: ID!
+    recruiterId: ID!
+  ): Boolean
 }
-
-
 
 ###############################################################################
 ##                                  Types                                    ##
@@ -196,7 +204,7 @@ type Tier {
   price1Y: Float
   priceM: Float
   tierFeatures: [TierFeature]
-  subscriptions: [Subscription]
+  subscriptions: [Subscr]
 }
 
 type TierFeature {
@@ -211,10 +219,11 @@ type Recruiter {
   lastName: String
   email: String
   phone: String
-  subscription: Subscription
+  subscription: Subscr
   companies: [CompanyRecruiter]
 }
-type Subscription {
+type Subscr {
+  id: ID
   tier: Tier
   recruiter: Recruiter
   startDate: Date

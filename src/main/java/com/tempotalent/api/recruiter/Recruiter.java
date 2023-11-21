@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.tempotalent.api.companyrecruiter.CompanyRecruiter;
-import com.tempotalent.api.subscription.Subscription;
+import com.tempotalent.api.subscription.Subscr;
 
 @Entity
 @Table(name = "recruiter")
@@ -26,7 +26,7 @@ public class Recruiter {
   private String password;
 
   @OneToOne(mappedBy = "recruiter")
-  private Subscription subscription;
+  private Subscr subscription;
 
   @OneToMany(mappedBy = "recruiter")
   private List<CompanyRecruiter> companies;
