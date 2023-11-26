@@ -1,6 +1,7 @@
 package com.tempotalent.api.tierfeature;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 
@@ -39,6 +40,12 @@ public class TierFeatureKey implements Serializable {
 
   @Override
   public int hashCode() {
-    return 31 * tierId.hashCode() + featureId.hashCode();
+    return Objects.hash(tierId, featureId);
+  }
+
+  @Override
+  public String toString() {
+    System.out.println(super.toString());
+    return super.toString();
   }
 }
